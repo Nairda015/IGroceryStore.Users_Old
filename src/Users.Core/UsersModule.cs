@@ -14,31 +14,11 @@ using MongoDB.Driver;
 
 namespace IGroceryStore.Users;
 
-public class UsersModule : IModule
+public static class UsersModule
 {
-    public string Name => Source.Name;
+    public static string Name => Source.Name;
     public static ActivitySource Source { get; } = new("Users", "1.0.0.0");
-
-    public void Register(IServiceCollection services, IConfiguration configuration)
-    {
-        services.RegisterHandlers<UsersModule>();
-        
-        RegisterMongoCollections(services, configuration);
-    }
-
-    public void Use(IApplicationBuilder app)
-    {
-    }
-
-    public void Expose(IEndpointRouteBuilder endpoints)
-    {
-        endpoints.MapGet($"/api/health/{Name.ToLower()}", () => $"{Name} module is healthy")
-            .WithTags(Constants.SwaggerTags.HealthChecks);
-
-        endpoints.RegisterEndpoints<UsersModule>();
-    }
-    
-    private static void RegisterMongoCollections(IServiceCollection services, IConfiguration configuration)
+    public static void RegisterMongoCollections(this IServiceCollection services, IConfiguration configuration)
     {
         var settings = configuration.GetOptions<MongoDbSettings>();
         var mongoClient = new MongoClient(settings.ConnectionString);

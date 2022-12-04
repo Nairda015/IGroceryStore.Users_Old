@@ -9,7 +9,7 @@ namespace IGroceryStore.Shared.Configuration;
 public static class EndpointsExtensions
 {
     public static void RegisterHandlers<T>(this IServiceCollection services)
-        where T : class, IModule
+        where T : class
     {
         var assembly = Assembly.GetAssembly(typeof(T))!;
         
@@ -25,7 +25,7 @@ public static class EndpointsExtensions
     }
     
     public static void RegisterEndpoints<T>(this IEndpointRouteBuilder endpoints)
-        where T : class, IModule
+        where T : class
     {
         var assembly = Assembly.GetAssembly(typeof(T));
         var moduleEndpoints = assembly!

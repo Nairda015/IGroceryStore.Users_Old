@@ -1,6 +1,7 @@
+
 using IGroceryStore.API.Initializers;
 
-namespace IGroceryStore.API.Configuration;
+namespace IGroceryStore.Users.Configuration;
 
 public static class AwsConfiguration
 {

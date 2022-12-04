@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Bogus;
 using IGroceryStore.Users.Features.Users;
 
@@ -31,4 +32,20 @@ internal static class TestUsers
             return new Register(body);
         }
     }
+}
+
+public interface IMockUser
+{
+    List<Claim> Claims { get; }
+}
+public class MockUser : IMockUser
+{
+    public List<Claim> Claims { get; private set; } = new();
+    public MockUser(params Claim[] claims)
+        => Claims = claims.ToList();
+}
+
+public static class AuthConstants
+{
+    public const string Scheme = "TestAuth";
 }

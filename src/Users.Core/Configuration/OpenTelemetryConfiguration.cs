@@ -1,6 +1,5 @@
 using System.Diagnostics;
-using IGroceryStore.Shared.Common;
-using Npgsql;
+using IGroceryStore.Users;
 using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -9,7 +8,7 @@ namespace IGroceryStore.API.Configuration;
 
 public static class OpenTelemetryConfiguration
 {
-    public static void ConfigureOpenTelemetry(this WebApplicationBuilder builder, IEnumerable<IModule> modules)
+    public static void ConfigureOpenTelemetry(this WebApplicationBuilder builder)
     {
         builder.Services.AddOpenTelemetryTracing(x =>
         {
@@ -19,25 +18,13 @@ public static class OpenTelemetryConfiguration
                     .AddEnvironmentVariableDetector())
                 .AddHttpClientInstrumentation()
                 .AddAspNetCoreInstrumentation()
-                .AddModulesInstrumentation(modules)
+                .AddSource(UsersModule.Name)
                 .AddSource("MassTransit")
-                .AddEntityFrameworkCoreInstrumentation()
-                .AddNpgsql()
                 .AddAWSInstrumentation()
                 .AddJaeger();
         });
     }
-    
-    private static TracerProviderBuilder AddModulesInstrumentation(this TracerProviderBuilder builder, IEnumerable<IModule> modules)
-    {
-        foreach (var module in modules)
-        {
-            builder.AddSource(module.Name);
-        }
-        
-        return builder;
-    }
-    
+
     private static TracerProviderBuilder AddJaeger(this TracerProviderBuilder builder)
     {
         return builder.AddJaegerExporter(o =>

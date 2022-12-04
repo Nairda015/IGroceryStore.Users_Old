@@ -3,3 +3,14 @@ obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+.idea
+volumes
+.vs/
+[Mm]igrations/
+FodyWeavers.xml
+FodyWeavers.xsd
+*.tfvars
+*.db
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate*

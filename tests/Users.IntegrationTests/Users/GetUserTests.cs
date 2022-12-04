@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using FluentAssertions;
 using IGroceryStore.Shared;
-using IGroceryStore.Shared.Tests.Auth;
 using IGroceryStore.Users.ReadModels;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.IdentityModel.JsonWebTokens;

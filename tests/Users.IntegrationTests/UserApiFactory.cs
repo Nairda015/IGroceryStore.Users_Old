@@ -6,12 +6,8 @@ using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using IGroceryStore.API;
 using IGroceryStore.API.Initializers;
-using IGroceryStore.Products.Persistence.Contexts;
 using IGroceryStore.Shared;
-using IGroceryStore.Shared.Services;
-using IGroceryStore.Shared.Tests.Auth;
 using IGroceryStore.Users.Contracts.Events;
-using IGroceryStore.Users.Persistence.Contexts;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -19,7 +15,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
-using Npgsql;
 using Respawn;
 
 namespace IGroceryStore.Users.IntegrationTests;
@@ -69,13 +64,6 @@ public class UserApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 
         builder.ConfigureTestServices(services =>
         {
-            // we need all because we are running migrations in app startup
-            services.CleanDbContextOptions<UsersDbContext>();
-            services.CleanDbContextOptions<ProductsDbContext>();
-
-            services.AddPostgresContext<UsersDbContext>(_dbContainer);
-            services.AddPostgresContext<ProductsDbContext>(_dbContainer);
-
             services.AddTestAuthentication();
 
             services.AddSingleton<IMockUser>(_ => _user);
@@ -85,7 +73,8 @@ public class UserApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
     public async Task InitializeAsync()
     {
         await _dbContainer.StartAsync();
-        _dbConnection = new NpgsqlConnection(_dbContainer.ConnectionString);
+        //TODO: Add mongo connection
+        //_dbConnection = new NpgsqlConnection(_dbContainer.ConnectionString);
         HttpClient = CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
         await InitializeRespawner();
     }
